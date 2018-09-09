@@ -27,9 +27,5 @@ users = ['bobby','bobby1','bobby2','bobby1','bobby','bobby']
 
 statistics = {}
 for user in users:
-    if statistics.get(user) is None:
-        statistics[user] = 1
-    else:
-        statistics[user] += 1
-
+    statistics[user] = statistics.get(user,0) + 1
 print(statistics)
