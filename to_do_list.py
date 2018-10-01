@@ -95,11 +95,31 @@ class Todo(Resource):
 		todo_list.append(d)
 		return jsonify(todo_list)
 
-	def put(self,id):
-		pass
+	def post(self,id):
+		todolist = To_do_list.query.get(id)
+		if request.form['delete'] == 'delete':
+			db.session.delete(todolist)
+			db.session.commit()
+			return redirect(url_for('index'))
+		todo_list = []
+		todolist.item = request.form['item']
+		todolist.remark = request.form['remark']
+		todolist.priority = request.form['priority']
+		d = dict(
+			id = todolist.id,
+			item = todolist.item,
+			remark = todolist.remark,
+			priority = todolist.priority
+		)
+		db.session.commit()
+		todo_list.append(d)
+		return redirect(url_for('index'))
 
-	def delete(self,id):
-		pass
+	# def put(self,id):
+	# 	pass
+
+	# def delete(self,id):
+	# 	pass
 
 api.add_resource(Todolist,'/v1_to_do_list/')
 api.add_resource(Todo,'/v1_to_do_list/<int:id>')
