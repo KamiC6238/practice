@@ -96,6 +96,11 @@ class Todo(Resource):
 		return jsonify(todo_list)
 
 	def post(self,id):
+		'''
+		在提交的表单上面用了一个隐藏的input标签，值为delete，如果点击delete按钮，就会提交这个标签的值
+		然后将对应的todolist删掉
+		否则就说明没有点击delete，而是编辑按钮
+		'''
 		todolist = To_do_list.query.get(id)
 		if request.form['delete'] == 'delete':
 			db.session.delete(todolist)
