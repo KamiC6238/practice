@@ -21,7 +21,7 @@ class Tree:
     def createTree(self,value):
         node = Node(value)
         root = self.root
-        while root is not None:
+        while True:
             if value > root.value and root.right is None:
                 root.right = node
                 break
