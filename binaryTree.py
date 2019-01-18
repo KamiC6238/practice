@@ -1,7 +1,7 @@
 # practice
 
 '''
-   二叉树的前中后遍历，包括递归和非递归
+   二叉树的前中后遍历，包括递归和非递归,序列和反序列化
    
 '''
 
@@ -22,6 +22,8 @@ class Tree:
         node = Node(value)
         root = self.root
         while True:
+            if value == root.value:
+                break
             if value > root.value and root.right is None:
                 root.right = node
                 break
@@ -98,6 +100,24 @@ class Tree:
                 self.stack.append(node.right)
         while len(self.help) > 0:
             print(str(self.help.pop().value) + ' ',end="")
+    
+    # 前序遍历序列化
+    def serialize(self,root):
+        if root is None:
+            self.res += '#_'
+        else:
+            self.res += str(root.value) + '_'
+            self.serialize(root.left)
+            self.serialize(root.right)
+    
+    # 反序列化
+    def deserialize(self,res):
+        if res is '':
+            return None
+        seq = re.split('_',res)
+        for value in seq:
+            if value.isdigit() is True:
+                self.create_Tree(int(value))
 
 if __name__ == '__main__':
     tree = Tree(5)
@@ -119,3 +139,10 @@ if __name__ == '__main__':
     print('\n')
     tree.posOrder(tree.root)
     print('\n')
+   
+    tree.serialize(se.root)
+    print(tree.res)
+    tree.res = ''
+    tree.deserialize(tree.res)
+    tree.serialize(tree.root)
+    print(tree.res)
