@@ -1,11 +1,18 @@
 # practice
 
 '''
-   二叉树的前中后遍历，包括递归和非递归,序列和反序列化
+   二叉树的前中后遍历，包括递归和非递归,序列和反序列化，判断二叉树是否为搜索二叉树以及是否为平衡二叉树
    
 '''
 
+class ReturnData:
     
+    def __init__(self,isB,height):
+        self.isB = isB
+        self.height = height
+      
+class Node:
+   
     def __init__(self,value=None,left=None,right=None):
         self.value = value
         self.left = left
@@ -118,6 +125,39 @@ class Tree:
         for value in seq:
             if value.isdigit() is True:
                 self.create_Tree(int(value))
+                  
+    # 判断二叉树是否为搜索二叉树
+    def isSearchBinaryTree(self,root):
+        res = 0
+        while self.isNotEmpty() or root is not None:
+            if root is not None:
+                self.stack.append(root)
+                root = root.left
+            else:
+                node = self.stack.pop()
+                if node.value >= res:
+                    res = node.value
+                    root = node.right
+                else:
+                    return False
+        return True
+   
+    # 判断二叉树是否为平衡二叉树
+    def isBalanceBinaryTree(self,root):
+        return self.process(root)
+    
+    def process(self,root):
+        if root is None:
+            return ReturnData(True,0)
+        data_left = self.process(root.left)
+        if data_left.isB is False:
+            return ReturnData(False,0)
+        data_right = self.process(root.right)
+        if data_right.isB is False:
+            return ReturnData(False,0)
+        if (data_left.height - data_right.height) > 1:
+            return ReturnData(False,0)
+        return ReturnData(True,max(data_left.height,data_right.height) + 1)             
 
 if __name__ == '__main__':
     tree = Tree(5)
@@ -146,3 +186,7 @@ if __name__ == '__main__':
     tree.deserialize(tree.res)
     tree.serialize(tree.root)
     print(tree.res)
+   
+    print(tree.isSearchBinaryTree(tree.root))
+      
+    print(tree.isBalanceBinaryTree(tree.root).isB)
