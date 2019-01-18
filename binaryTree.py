@@ -1,9 +1,27 @@
 # practice
 
 '''
-   二叉树的前中后遍历，包括递归和非递归,序列和反序列化，判断二叉树是否为搜索二叉树以及是否为平衡二叉树
+   二叉树的前中后遍历，包括递归和非递归,序列和反序列化，判断二叉树是否为搜索二叉树和是否为平衡二叉树,以及是否为完全二叉树
+   
+   判断是否为搜索二叉树:利用中序遍历，只要所有节点的值是按升序排列的即可。
+   
+   判断是否为平衡二叉树:创建一个包含是否平衡以及高度两个属性的类，利用递归的思想，判断一个节点的左子树是否平衡，不平衡则返回False，
+                      同理判断右子树是否平衡，否则返回False，若左右子树都平衡，则将左右子树的高度差进行相减，若结果大于1，说明
+                      不平衡，此时返回False，若小于1，则返回左右子树树中高度较高的那棵树的高度再加1。
+                      加1是加上了父节点，表明整棵树的高度。
+                      
+   关于判断是否为完全二叉树的思路:首先这个题要采用层序遍历，既然是完全二叉树，那么必须满足下列的两种情况:
+                                1.任意节点不得只有右子树却没有左子树
+                                2.当任意节点的左右子树均不全时，该节点后面的所有节点必须是叶子节点。
+                                第二个条件建立在第一个条件之上，也就是说第二个条件，当左右子树都不全的情况是只有左子树没有右子树
+                                或者左右子树都没有。此时该节点后面的所有节点都必须为叶子节点。
+                                在代码中，加入了一个leaf变量来表示是否要判断接下来的节点是否为叶子节点，起始值为False，
+                                当满足第二个条件时，让leaf为True,也就是说不管左子树有没有，只要右子树为空，leaf就必须为True
+                                
    
 '''
+
+from collections import deque
 
 class ReturnData:
     
@@ -24,6 +42,7 @@ class Tree:
         self.root = Node(value)
         self.stack = list()
         self.help = list()
+        self.leaf = False
 
     def createTree(self,value):
         node = Node(value)
@@ -157,7 +176,25 @@ class Tree:
             return ReturnData(False,0)
         if (data_left.height - data_right.height) > 1:
             return ReturnData(False,0)
-        return ReturnData(True,max(data_left.height,data_right.height) + 1)             
+        return ReturnData(True,max(data_left.height,data_right.height) + 1)
+   
+    # 判断二叉树是否为完全二叉树
+    def isCompleteBT(self,root):
+        de = deque()
+        de.append(root)
+        while len(de) > 0:
+            node = de.popleft()
+            l = node.left
+            r = node.right
+            if (l is None and r is not None) or (self.leaf and (l is not None or r is not None)):
+                return False
+            if l is not None:
+                de.append(l)
+            if r is not None:
+                de.append(r)
+            else:
+                self.leaf = True
+        return True
 
 if __name__ == '__main__':
     tree = Tree(5)
