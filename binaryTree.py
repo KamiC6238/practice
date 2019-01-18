@@ -195,9 +195,31 @@ class Tree:
             else:
                 self.leaf = True
         return True
+   
+    # 已知二叉树为完全二叉树，求节点个数，时间复杂度小于O（n）
+    def getNodeNums(self,root):
+        if root is None:
+            return 0
+        h = self.most_left_level(root,1)
+        return self.bs(root,1,h)
+
+    def bs(self,node,level,h):
+        if level == h:
+            return 1
+        if self.most_left_level(node.right,level+1) == h:
+            return pow(2,h - level) + self.bs(node.right,level+1,h) 
+        else:
+            return pow(2,h - level - 1) + self.bs(node.left,level+1,h)
+
+    def most_left_level(self,node,level):
+        while node is not None:
+            level += 1
+            node = node.left
+        return level - 1
 
 if __name__ == '__main__':
-    tree = Tree(5)
+    tree = Tree(5) 
+    # seq = [10,15,8,11,13,16,3,9]  测试完全二叉树节点个数的数据
     seq = [3,8,2,4,1,7,6,10,9,11]
     for i in seq:
         tree.createTree(i)
